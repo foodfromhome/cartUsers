@@ -94,4 +94,3 @@ async def update_cart_item_quantity(user_id: int, meals_id: PydanticObjectId, qu
 
     except HTTPException as e:
         return JSONResponse(content=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

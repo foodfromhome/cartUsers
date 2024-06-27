@@ -1,17 +1,12 @@
-import os
-
+from config import settings
 import motor.motor_asyncio
-from dotenv import load_dotenv
 
-load_dotenv()
+DATABASE_URL = (f"mongodb://{settings.mongo_username}:{settings.mongo_password}@"
+                f"{settings.mongo_host}:{settings.mongo_port}")
 
-DB_USERNAME = os.getenv("DB_USERNAME")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-
-DATABASE_URL = f"mongodb://{DB_USERNAME}:{DB_PASSWORD}@mongo:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(
     DATABASE_URL, uuidRepresentation="standard"
 )
 
-db = client['users_cart']
+db = client[f'{settings.mongo_db}']
