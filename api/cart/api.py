@@ -10,8 +10,8 @@ from api.cart.models import CartUser
 router = APIRouter()
 
 
-@router.post("/{user_id}/carts/{meals_id}", status_code=status.HTTP_201_CREATED, summary="Добавление в корзину")
-async def add_to_cart(meals_id: PydanticObjectId, user_id: int):
+@router.post("/{user_id}/carts/", status_code=status.HTTP_201_CREATED, summary="Добавление в корзину")
+async def add_to_cart(user_id: int, request: CartItem):
     try:
 
         cart = await CartUser.find_one({"user_id": user_id})
@@ -20,14 +20,14 @@ async def add_to_cart(meals_id: PydanticObjectId, user_id: int):
 
             cart = CartUser(
                 user_id=user_id,
-                items=[CartItem(id=meals_id, quantity=1)]
+                items=[CartItem(**request.dict())],
             )
             await cart.save()
             return cart
 
         else:
 
-            cart.items.append(CartItem(id=meals_id, quantity=1))
+            cart.items.append(CartItem(**request.dict()))
             cart.updated_at = datetime.now()
             await cart.save()
 
